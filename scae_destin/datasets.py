@@ -217,15 +217,21 @@ def load_fer_2013(filename, expect_labels=True):
         X_row_strs = X_row_str.split('.')
 	#X_row_strs[0].append('-lo.jpg')
         name = ''
-        name += '../scripts/'
+        name += '../scripts/test/'
         name += X_row_strs[0]
-        name += '-lo.jpg'
+        name += '-lo.jpgminimized.jpg'
+	print "The files that are being processed are" + name
         print "test test finito"
         print name
-        X_name = cv2.imread(name);
-        X_list.append(X_name)
-
-    X = np.array(X_list)
+        
+	X_name = cv2.imread(name);
+	#print X_name[0].size;
+        #X_name1 = X_name.split(',')
+	X_list.append(X_name)
+        print  X_list[0].size; 
+	#print  X_list[0].size.Y;
+	
+    X = np.asarray(X_list[0])
     #X = X_list
     if expect_labels:
         y = np.asarray(y_list)

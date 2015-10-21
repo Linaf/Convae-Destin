@@ -24,13 +24,13 @@ from scae_destin.cost import mean_square_cost
 from scae_destin.cost import categorical_cross_entropy_cost
 from scae_destin.cost import L2_regularization
 
-warnings.simplefilter("ignore")
+warnings.simplefilter("error")
 
 n_epochs=100
 #batch_size=100
 #nkerns=100
-batch_size=433600
-nkerns=433600
+batch_size=100
+nkerns=100
 #img = cv2.imread('../scae_destin/SS_0539-lo.jpg');
 #print img
 
@@ -59,40 +59,38 @@ print "[MESSAGE] The data is loaded"
 
 ################################## FIRST LAYER #######################################
 
-X=T.fmatrix("data")
+X=T.matrix("data")
 y=T.ivector("label")
 idx=T.lscalar()
 #print idx.get_value()
 corruption_level=T.fscalar()
-
-images=X.reshape((batch_size, 1, 800, 800))
+images=X.reshape((batch_size, 1, 32, 32))
 
 layer_0_en=ReLUConvLayer(filter_size=(5,5),
-                         num_filters=160,
+                         num_filters=50,
                          num_channels=1,
-                         fm_size=(800,800),
+                         fm_size=(32,32),
                          batch_size=batch_size)
                                                   
 layer_0_de=SigmoidConvLayer(filter_size=(5,5),
                             num_filters=1,
-                            num_channels=160,
-                            fm_size=(796,796),
+                            num_channels=50,
+                            fm_size=(28,28),
                             batch_size=batch_size,
                             border_mode="full")
                          
 layer_1_en=ReLUConvLayer(filter_size=(5,5),
-                         num_filters=160,
-                         num_channels=160,
-                         fm_size=(400,400),
+                         num_filters=50,
+                         num_channels=50,
+                         fm_size=(14,14),
                          batch_size=batch_size)
                                                    
 layer_1_de=SigmoidConvLayer(filter_size=(5,5),
-                            num_filters=160,
-                            num_channels=160,
-                            fm_size=(396,396),
+                            num_filters=50,
+                            num_channels=50,
+                            fm_size=(10,10),
                             batch_size=batch_size,
                             border_mode="full")
-
 # layer_2_en=ReLUConvLayer(filter_size=(5,5),
 #                          num_filters=50,
 #                          num_channels=50,
