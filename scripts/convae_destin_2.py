@@ -24,34 +24,57 @@ from scae_destin.cost import mean_square_cost
 from scae_destin.cost import categorical_cross_entropy_cost
 from scae_destin.cost import L2_regularization
 
-warnings.simplefilter("error")
-
-n_epochs=100
+#warnings.simplefilter("error")
+#exception_verbosity=high
+n_epochs=200
 #batch_size=100
 #nkerns=100
-batch_size=100
-nkerns=100
+batch_size=200
+nkerns=200
 #img = cv2.imread('../scae_destin/SS_0539-lo.jpg');
 #print img
 
 #Xtr, Ytr, Xte, Yte=ds.load_CIFAR10("../cifar-10-batches-py/")
-#ds.load_fer_2013("WSEFEP - norms & FACS.csv",True)
-X, y = ds.load_fer_2013("WSEFEP - norms & FACS.csv")
+
+ds.load_fer_2013("WSEFEP - norms & FACS2.csv",True)
+print "this class"
+X, y = ds.load_fer_2013("WSEFEP - norms & FACS2.csv")
 print X
-X=np.mean(X,3)
+print X.shape
+print "transpose"
+#X=X.reshape(160, 3, 32, 32).transpose(0,2,3,1).astype("float32");
+print X.shape
+#print X[0][1]
+Xtr= np.mean(X, 3)
 #Xte=np.nanmean(X, 3)
-#print X
+print Xtr
+ytr = y
 #print y
 #X=np.nanmean(X,axis=1,keepdims=True)
 #print X
 
-Xtrain=X.reshape(X.shape[0], X.shape[1]*X.shape[2])/255.0
-Xtest=X.reshape(X.shape[0], X.shape[1]*X.shape[2])/255.0
+Xtrain=Xtr.reshape(Xtr.shape[0], Xtr.shape[1] * Xtr.shape[2])/255.0
+
+ds.load_fer_2013("WSEFEP - norms & FACS2.csv",True)
+print "this class2"
+X, y = ds.load_fer_2013("WSEFEP - norms & FACS2.csv")
+print X
+print X.shape
+#X=X.reshape(160, 3, 32, 32).transpose(0,2,3,1).astype("float32");
+#print X[0][1]
+Xte = np.mean(X, 3)
+#Xte=np.nanmean(X, 3)
+print Xte
+yte = y 
+Xtest=Xte.reshape(Xte.shape[0], Xte.shape[1] * Xte.shape[2])/255.0
 #print Xtrain
 
-train_set_x, train_set_y=ds.shared_dataset((Xtrain, y))
-test_set_x, test_set_y=ds.shared_dataset((Xtest, y))
-
+train_set_x, train_set_y=ds.shared_dataset((Xtrain, ytr))
+print "************"
+print train_set_x
+test_set_x, test_set_y=ds.shared_dataset((Xtest, yte))
+print test_set_x.type
+print "**************"
 n_train_batches=train_set_x.get_value(borrow=True).shape[0]/batch_size
 n_test_batches=test_set_x.get_value(borrow=True).shape[0]/batch_size
 
@@ -60,12 +83,19 @@ print "[MESSAGE] The data is loaded"
 ################################## FIRST LAYER #######################################
 
 X=T.matrix("data")
+print type(X)
 y=T.ivector("label")
+print "*****"
+print y.ndim
 idx=T.lscalar()
+
 #print idx.get_value()
 corruption_level=T.fscalar()
-images=X.reshape((batch_size, 1, 32, 32))
-
+print idx.ndim
+print X.shape
+images=X.reshape((batch_size,1, 32, 32))
+ 
+print images.shape
 layer_0_en=ReLUConvLayer(filter_size=(5,5),
                          num_filters=50,
                          num_channels=1,

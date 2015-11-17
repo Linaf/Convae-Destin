@@ -187,7 +187,7 @@ def load_fer_2013(filename, expect_labels=True):
      
     y_list = [];
     X_list = [];
-    
+    X_list_outer= [];
     for row in reader:
         
         if expect_labels:
@@ -227,11 +227,39 @@ def load_fer_2013(filename, expect_labels=True):
 	X_name = cv2.imread(name);
 	#print X_name[0].size;
         #X_name1 = X_name.split(',')
-	X_list.append(X_name)
-        print  X_list[0].size; 
+	X_list.append(np.transpose(X_name,(2,0,1)))
+#        X_list.append(X_name)
+
+#	X_list_outer.append(X_list)
+ #       print  X_list_outer[0].shape; 
 	#print  X_list[0].size.Y;
-	
-    X = np.asarray(X_list[0])
+   
+
+   # print "X_list_outer dim " + X_list_outer.shape
+    X_list_new = []
+    X = np.asarray(X_list).astype('float')
+    for x in range(0, len(X)):
+        X_list_new.append(X[x])
+    
+
+    shape = X_list_new[0]
+    X_list_new[0] = len(X)
+    X_list_new[1] = shape
+
+    	#x_list_outer = X_list[x][0]
+        #X_list_outer.append(X[x])
+    
+    
+    #X_list_new.append(X)
+    #X_list_new[0]= X
+    print X_list[0]
+    print 'next'
+    print X_list_new[0];
+    print len(X)
+    print len(X_list)
+    print "X_list_new dim ";
+    print X_list_new[1];
+    #X=X.reshape(160, 3, 32, 32).transpose(0,3,2,1).astype("float32");
     #X = X_list
     if expect_labels:
         y = np.asarray(y_list)
